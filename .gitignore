@@ -1,0 +1,7 @@
+*.csv
+*.png
+*.RData
+*.pkl
+*.pth
+.DS_Store
+__pycache__
