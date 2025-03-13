@@ -53,7 +53,7 @@ agent = DQN_Agent(
     epsilon_decay=epsilon_decay,
     epsilon_min=epsilon_min,
     learning_rate=learning_rate,
-    batch_size=batch_size,
+    batch_size=batch_size
 )
 
 # Set up training parameters
@@ -61,11 +61,10 @@ episode = 0
 stop_remain = 500
 stop_flag = False
 max_cum_reward = 0
-uupdate_net_step = 10
 
 result = {"action_result": {}, "reward_result": {}, "cum_reward_result": {}}
 
-seed = 41
+seed = 415
 random.seed(seed)
 np.random.seed(seed)
 
@@ -108,9 +107,6 @@ while not stop_flag:
         max_cum_reward = cum_reward
         agent.save_model(f"pre-train/pre-train-model_{cum_reward: .4f}.pth")
         write_cache_file(result, "pre-train/train_result.pkl")
-    
-    if episode % uupdate_net_step == 0:
-        agent.update_target_net()
 
     episode += 1
 

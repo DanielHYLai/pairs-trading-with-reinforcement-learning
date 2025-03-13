@@ -142,39 +142,23 @@ class DQN_Agent:
         minibatch = random.sample(self.memory, self.batch_size)
         for state, action, reward, next_state, done in minibatch:
             state = torch.FloatTensor(state).to(self.device)
-            action = torch.LongTensor([action]).to(self.device)
             next_state = torch.FloatTensor(next_state).to(self.device)
             reward = torch.FloatTensor([reward]).to(self.device)
             done = torch.FloatTensor([done]).to(self.device)
 
-            # target = reward
+            target = reward
 
-            # if not done:
-            #     target += self.gamma * torch.max(self.model(next_state)).detach()
+            if not done:
+                target += self.gamma * torch.max(self.model(next_state)).detach()
 
-            # target_net = self.model(state).clone()
-            # target_net[0][action] = target
+            target_net = self.model(state).clone()
+            target_net[0][action] = target
 
-            # self.optimizer.zero_grad()
-            # loss = self.criterion(self.model(state), target_net.detach())
-            # loss.backward()
-            # self.optimizer.step()
-
-            current_q = self.model(state)
-            current_q[0][action] = reward
-            next_q = self.target(next_state)
-
-            target = reward + (1 - done) * self.gamma * torch.max(next_q).detach()
-            loss  = self.criterion(current_q, target)
             self.optimizer.zero_grad()
+            loss = self.criterion(self.model(state), target_net.detach())
             loss.backward()
             self.optimizer.step()
-    
-    def update_target_net(self):
-        """
-        Update the paramters of target network from policy network.
-        """
-        self.target.load_state_dict(self.model.state_dict())
+
     
     def epsilon_decrease(self):
         """
