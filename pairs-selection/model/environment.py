@@ -1,7 +1,3 @@
-# Import the necessary packages
-import numpy as np
-
-
 class envTrader:
     def __init__(
         self,
