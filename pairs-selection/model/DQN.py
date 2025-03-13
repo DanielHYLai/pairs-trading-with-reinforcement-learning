@@ -160,7 +160,8 @@ class DQN_Agent:
             # loss.backward()
             # self.optimizer.step()
 
-            current_q = self.model(state).gather(1, action).squeeze(1)
+            current_q = self.model(state)
+            current_q[0][action] = reward
             next_q = self.target(next_state)
 
             target = reward + (1 - done) * self.gamma * torch.max(next_q).detach()
