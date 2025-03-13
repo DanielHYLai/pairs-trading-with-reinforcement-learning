@@ -1,6 +1,7 @@
 # Import the necessary packages
 import numpy as np
 
+
 class envTrader:
     def __init__(
         self,
@@ -21,7 +22,7 @@ class envTrader:
 
         self.cumulative_reward = 0
         self.done = False
-    
+
     def reset(self):
         """
         Initialize the environment to the initial state.
@@ -40,7 +41,7 @@ class envTrader:
         self.done = False
 
         return self.agent_state
-    
+
     def return_calculator(self, close_1, close_2, return_1, return_2, coef):
         """
         Calculate the total return of a transaction.
@@ -74,7 +75,7 @@ class envTrader:
         )
 
         return result
-    
+
     def step(self, action):
         """
         All the processing from the previous state to the next state.
@@ -191,7 +192,7 @@ class envTrader:
                 reward_record.append(total_return)
 
                 LB_long_price, LB_short_price = None, None
-            
+
             else:
                 total_return = 0
                 reward_record.append(total_return)
@@ -216,7 +217,7 @@ class envTrader:
         self.agent_state = next_agent_state
 
         return next_agent_state, reward, self.cumulative_reward, self.done
-    
+
     def render(self, action, reward, max_cum_reward=None):
         """
         Display the results of the trading strategy.
@@ -228,7 +229,7 @@ class envTrader:
 
         reward : float
             The reward obtained from executing the trading strategy
-        
+
         max_cum_reward : float
             The maximum cumulative reward obtained from executing the trading strategy
         """
