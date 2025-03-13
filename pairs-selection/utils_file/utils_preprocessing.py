@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
+
 # Create the initial state space
 def state_space_creator(data: pd.DataFrame, ticker_list: list, trade_window: int = 1):
     """
@@ -29,11 +30,11 @@ def state_space_creator(data: pd.DataFrame, ticker_list: list, trade_window: int
     """
 
     state_space = {}
-    coint_coef  = {}
+    coint_coef = {}
     idx = 1
 
     # Obtain all unique years and months
-    unique_years  = data["Year"].unique().tolist()
+    unique_years = data["Year"].unique().tolist()
     unique_months = data["Month"].unique()
 
     # Check if the trading window is a factor of 12
@@ -99,6 +100,7 @@ def state_space_creator(data: pd.DataFrame, ticker_list: list, trade_window: int
             print("Done")
 
     return (state_space, coint_coef)
+
 
 # Calculate the trading threshold for traidng strategy
 def trading_threshold_creator(
@@ -201,6 +203,7 @@ def trading_threshold_creator(
     print("Done")
 
     return result
+
 
 # Merge and flatten the state of data
 def state_merge(obj: dict, ticker_list: list):

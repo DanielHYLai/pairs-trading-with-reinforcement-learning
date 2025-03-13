@@ -1,15 +1,24 @@
 # Import the necessary packages
+import os
 from itertools import combinations
 from time import time
 
 import pandas as pd
-
-from utils_file.tools import load_cache_file, write_cache_file, show_elapsed_time
-from utils_file.utils_preprocessing import state_space_creator, trading_threshold_creator, state_merge
+from utils_file.tools import load_cache_file, show_elapsed_time, write_cache_file
+from utils_file.utils_preprocessing import (
+    state_merge,
+    state_space_creator,
+    trading_threshold_creator,
+)
 
 # Load stock price data
 train = pd.read_csv("data_file/train_PT.csv", encoding="UTF-8")
-test  = pd.read_csv("data_file/test_PT.csv", encoding="UTF-8")
+test = pd.read_csv("data_file/test_PT.csv", encoding="UTF-8")
+
+# Create a folder to store pickle files
+path = "data_file/env_dqn_space"
+if not os.path.exists(path):
+    os.makedirs(path)
 
 # Create the initial state space for the training data and testing data
 ticker_combn = list(combinations(train["Ticker"].unique(), r=2))
@@ -31,7 +40,7 @@ ticker_combn = list(combinations(train["Ticker"].unique(), r=2))
 # show_elapsed_time(time() - start_time)
 
 state_space_train = load_cache_file("data_file/env_dqn_space/state_space_train.pkl")
-coint_coef_train  = load_cache_file("data_file/env_dqn_space/coint_coef_train.pkl")
+coint_coef_train = load_cache_file("data_file/env_dqn_space/coint_coef_train.pkl")
 
 state_space_test = load_cache_file("data_file/env_dqn_space/state_space_test.pkl")
 coint_coef_test = load_cache_file("data_file/env_dqn_space/coint_coef_test.pkl")
@@ -49,8 +58,12 @@ action_space = [k for k in state_space_train.keys()]
 # write_cache_file(obj=state_space_trading_test, file_name="data_file/env_dqn_space/state_space_trading_test.pkl")
 # show_elapsed_time(time() - start_time)
 
-state_space_trading_train = load_cache_file("data_file/env_dqn_space/state_space_trading_train.pkl")
-state_space_trading_test = load_cache_file("data_file/env_dqn_space/state_space_trading_test.pkl")
+state_space_trading_train = load_cache_file(
+    "data_file/env_dqn_space/state_space_trading_train.pkl"
+)
+state_space_trading_test = load_cache_file(
+    "data_file/env_dqn_space/state_space_trading_test.pkl"
+)
 
 # Merge and flatten the state of data
 # start_time = time()
@@ -61,5 +74,9 @@ state_space_trading_test = load_cache_file("data_file/env_dqn_space/state_space_
 # write_cache_file(obj=state_space_merge_test, file_name="data_file/env_dqn_space/state_space_merge_test.pkl")
 # show_elapsed_time(time() - start_time)
 
-state_space_merge_train = load_cache_file("data_file/env_dqn_space/state_space_merge_train.pkl")
-state_space_merge_test = load_cache_file("data_file/env_dqn_space/state_space_merge_test.pkl")
+state_space_merge_train = load_cache_file(
+    "data_file/env_dqn_space/state_space_merge_train.pkl"
+)
+state_space_merge_test = load_cache_file(
+    "data_file/env_dqn_space/state_space_merge_test.pkl"
+)
