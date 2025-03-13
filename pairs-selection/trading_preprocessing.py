@@ -11,17 +11,21 @@ from utils_file.utils_preprocessing import (
     trading_threshold_creator,
 )
 
+# Create a folder to store pickle files
+path = "data_file"
+if not os.path.exists(path):
+    os.makedirs(path)
+
 # Load stock price data
 train = pd.read_csv("data_file/train_PT.csv", encoding="UTF-8")
 test = pd.read_csv("data_file/test_PT.csv", encoding="UTF-8")
 
-# Create a folder to store pickle files
+# Create the initial state space for the training data and testing data
+ticker_combn = list(combinations(train["Ticker"].unique(), r=2))
+
 path = "data_file/env_dqn_space"
 if not os.path.exists(path):
     os.makedirs(path)
-
-# Create the initial state space for the training data and testing data
-ticker_combn = list(combinations(train["Ticker"].unique(), r=2))
 
 # start_time = time()
 # temp_train = state_space_creator(data=train, ticker_list=ticker_combn, trade_window=1)
