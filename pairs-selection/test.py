@@ -49,7 +49,7 @@ action_size = len(action_space)
 
 max_memory = 2000
 gamma = 0.5
-epsilon = 1.0
+epsilon = 0.0
 epsilon_decay = 0.995
 epsilon_min = 0.01
 learning_rate = 0.001
@@ -94,25 +94,23 @@ env = envTrader(
     action_space=action_space,
 )
 
-state = env.reset()
+env.idx = int(key_state.split("_")[1])
+state = env.agent_state_space[f"state_{env.idx}"]
 state = np.reshape(state, [1, state_size])
-done = False
 
-while not done:
-    action_idx = agent.sample_action(state)
-    action = action_space[action_idx]
-    next_state, reward, cum_reward, done = env.step(action)
-    env.render(action, reward)
-    next_state = np.reshape(next_state, [1, state_size])
-    state = next_state
+action_idx = agent.sample_action(state)
+action = action_space[action_idx]
+next_state, reward, cum_reward, done = env.step(action)
+env.render(action, reward)
+
 
 result["action_result"][key_state] = action
 result["reward_result"][key_state] = reward
 
 # 預測 OOS 的第二個月到最後一個月
 for idx in range(1, len(state_space_merge_test) + 1):
-    # for idx in range(1, 3): # test profile
-
+    
+    print(f"Processing State: {idx + 85}")
     epsilon = 1.0
 
     if idx == 1:
@@ -139,32 +137,23 @@ for idx in range(1, len(state_space_merge_test) + 1):
     ## Set up training parameters
     episode = 0
     stop_remain = 500
-    # stop_remain = 1  # test profile
     stop_flag = False
     max_cum_reward = 0
-
-    ## 擴增資料集
-    key_state = list(state_space_trading_test.keys())[idx]
-
-    state_space_trading[key_state] = state_space_trading_test[key_state]
-    state_space_merge[key_state] = state_space_merge_test[key_state]
-    coint_coef[key_state] = coint_coef_test[key_state]
-
+    
     env = envTrader(
         trade_state_space=state_space_trading,
         agent_state_space=state_space_merge,
         coint_coef_space=coint_coef,
         action_space=action_space,
     )
-
-    ## 開始預測
+    
+    ## 開始重新配適模型
     start_time = time()
     while not stop_flag:
         state = env.reset()
         state = np.reshape(state, [1, state_size])
         done = False
 
-        reward_history = []
         cum_reward_history = []
 
         while not done:
@@ -177,7 +166,6 @@ for idx in range(1, len(state_space_merge_test) + 1):
             if len(agent.memory) > batch_size:
                 agent.replay()
 
-            reward_history.append(reward)
             cum_reward_history.append(cum_reward)
 
         agent.epsilon_decrease()
@@ -209,9 +197,33 @@ for idx in range(1, len(state_space_merge_test) + 1):
                     stop_flag = True
                     print(f"Early stopping at episode {episode}.")
 
+    show_elapsed_time(time() - start_time)
+    
+    ## 預測下一個月
+    key_state = list(state_space_trading_test.keys())[idx]
+
+    state_space_trading[key_state] = state_space_trading_test[key_state]
+    state_space_merge[key_state] = state_space_merge_test[key_state]
+    coint_coef[key_state] = coint_coef_test[key_state]
+
+    env = envTrader(
+        trade_state_space=state_space_trading,
+        agent_state_space=state_space_merge,
+        coint_coef_space=coint_coef,
+        action_space=action_space,
+    )
+    
+    env.idx = int(key_state.split("_")[1])
+    state = env.agent_state_space[f"state_{env.idx}"]
+    state = np.reshape(state, [1, state_size])
+
+    action_idx = agent.sample_action(state)
+    action = action_space[action_idx]
+    next_state, reward, cum_reward, done = env.step(action)
+    env.render(action, reward)
+        
     result["action_result"][key_state] = action
     result["reward_result"][key_state] = reward
-    write_cache_file(result, f"pre-train/test_result_{idx+84}.pkl")
-
-    show_elapsed_time(time() - start_time)
+    write_cache_file(result, f"pre-train/test_result_{idx+85}.pkl")
+    
     print("-" * 20)
