@@ -6,8 +6,8 @@ from time import time
 
 import numpy as np
 
-from model.environment import envTrader
 from model.DQN import DQN_Agent
+from model.environment import envTrader
 from utils_file.tools import load_cache_file, show_elapsed_time, write_cache_file
 
 warnings.filterwarnings("ignore")
@@ -18,8 +18,12 @@ if not os.path.exists(path):
     os.makedirs(path)
 
 # Load environment data
-state_space_trading = load_cache_file("data_file/env_dqn_space/state_space_trading_train.pkl")
-state_space_merge = load_cache_file("data_file/env_dqn_space/state_space_merge_train.pkl")
+state_space_trading = load_cache_file(
+    "data_file/env_dqn_space/state_space_trading_train.pkl"
+)
+state_space_merge = load_cache_file(
+    "data_file/env_dqn_space/state_space_merge_train.pkl"
+)
 coint_coef = load_cache_file("data_file/env_dqn_space/coint_coef_train.pkl")
 action_space = [k for k in state_space_trading["state_1"].keys()]
 
@@ -53,7 +57,7 @@ agent = DQN_Agent(
     epsilon_decay=epsilon_decay,
     epsilon_min=epsilon_min,
     learning_rate=learning_rate,
-    batch_size=batch_size
+    batch_size=batch_size,
 )
 
 # Set up training parameters

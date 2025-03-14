@@ -7,6 +7,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+
 class DQN_Agent:
     def __init__(
         self,
@@ -20,11 +21,11 @@ class DQN_Agent:
         learning_rate: float = 0.001,
         batch_size: int = 10,
         pre_train_model: str = None,
-        pre_train_mode: str = None
+        pre_train_mode: str = None,
     ):
         self.state_size = state_size
         self.action_size = action_size
-        
+
         self.memory = deque(maxlen=max_memory)
 
         # hyperparamters
@@ -56,7 +57,7 @@ class DQN_Agent:
 
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
-    
+
     def policy_net(self):
         """
         Process the model.
@@ -80,7 +81,7 @@ class DQN_Agent:
         )
 
         return result
-    
+
     def remember(self, state, action, reward, next_state, done):
         """
         Remember the experience.
@@ -104,7 +105,7 @@ class DQN_Agent:
         """
 
         self.memory.append((state, action, reward, next_state, done))
-    
+
     def sample_action(self, state):
         """
         Sample an action.
@@ -130,7 +131,7 @@ class DQN_Agent:
                 action_value = self.model(state)
 
             return torch.argmax(action_value).item()
-    
+
     def replay(self):
         """
         Replay the experience.
@@ -159,7 +160,6 @@ class DQN_Agent:
             loss.backward()
             self.optimizer.step()
 
-    
     def epsilon_decrease(self):
         """
         Decay the epsilon value till reach setting minimal.
