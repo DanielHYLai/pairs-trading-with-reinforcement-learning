@@ -118,8 +118,17 @@ for idx in range(1, len(state_space_merge_test) + 1):
 
     else:
         pre_train_model = "pre-train/pre-train-model-test.pth"
-
+    
     ## Initialize agent
+    
+    max_memory = 2000
+    gamma = 0.5
+    epsilon = 1.0
+    epsilon_decay = 0.995
+    epsilon_min = 0.01
+    learning_rate = 0.001
+    batch_size = 10
+    
     agent = DQN_Agent(
         state_size=state_size,
         action_size=action_size,
