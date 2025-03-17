@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-
 from utils_file.tools import load_cache_file
 
 test_result = load_cache_file("pre-train/test_result_120.pkl")
