@@ -40,7 +40,6 @@ class DQN_Agent:
 
         if pre_train_model is not None:
             self.model = torch.load(pre_train_model).to(self.device)
-            self.target = torch.load(pre_train_model).to(self.device)
 
             if pre_train_mode == "eval":
                 self.model.eval()
@@ -53,7 +52,6 @@ class DQN_Agent:
 
         else:
             self.model = self.policy_net().to(self.device)
-            self.target = self.policy_net().to(self.device)
 
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
