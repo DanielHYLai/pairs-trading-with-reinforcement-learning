@@ -1,0 +1,2 @@
+DO NOT execute the "SP500_Crawler.R" file. That might be raise some file problems. 
+Or you can execute it WITHOUT OVERWRITE any output file and data. 
