@@ -70,10 +70,6 @@ agent = DQN_Agent(
 
 result = {"action_result": {}, "reward_result": {}}
 
-# seed = 112225024
-# random.seed(seed)
-# np.random.seed(seed)
-
 # 預測 OOS 的第一個月
 key_state = list(state_space_trading_test.keys())[0]
 state_space_trading = deepcopy(state_space_trading_train)
@@ -84,6 +80,10 @@ state_space_merge[key_state] = state_space_merge_test[key_state]
 
 coint_coef = deepcopy(coint_coef_train)
 coint_coef[key_state] = coint_coef_test[key_state]
+
+del state_space_trading["state_1"]
+del state_space_merge["state_1"]
+del coint_coef["state_1"]
 
 env = envTrader(
     trade_state_space=state_space_trading,
@@ -105,9 +105,11 @@ env.render(action, reward)
 result["action_result"][key_state] = action
 result["reward_result"][key_state] = reward
 
+result = load_cache_file("pre-train/test_result_90.pkl")
+
 # 預測 OOS 的第二個月到最後一個月
 # idx = 2
-for idx in range(1, len(state_space_merge_test)):
+for idx in range(8, len(state_space_merge_test)):
     max_memory = 2000
     gamma = 0.5
     epsilon = 1.0
@@ -120,7 +122,7 @@ for idx in range(1, len(state_space_merge_test)):
         pre_train_model = "pre-train/cum_pre-train-model_ 3.9925.pth"
 
     else:
-        pre_train_model = f"pre-train/pre-train-model_test_{idx + 85}.pth"
+        pre_train_model = f"pre-train/pre-train-model_test_{idx + 83}.pth"
 
     agent = DQN_Agent(
         state_size=state_size,
@@ -145,6 +147,8 @@ for idx in range(1, len(state_space_merge_test)):
 
     start_time = time()
     while not stop_flag:
+        print(f"episode: {episode + 1}")
+        
         state = env.reset()
         state = np.reshape(state, [1, state_size])
         done = False
@@ -174,11 +178,13 @@ for idx in range(1, len(state_space_merge_test)):
         temp_result["action_result"][f"episode_{episode + 1}"] = action_history
         temp_result["reward_result"][f"episode_{episode + 1}"] = reward_history
         temp_result["cum_reward_result"][f"episode_{episode + 1}"] = cum_reward_history
-
+        
+        print("-" * 20)
+        
         if cum_reward > max_cum_reward:
             max_cum_reward = cum_reward
-            agent.save_model(f"pre-train/pre-train-model_test_{idx + 85}.pth")
-            write_cache_file(temp_result, f"pre-train/history_{idx + 85}.pkl")
+            agent.save_model(f"pre-train/pre-train-model_test_{idx + 84}.pth")
+            write_cache_file(temp_result, f"pre-train/history_{idx + 84}.pkl")
 
         episode += 1
 
@@ -208,6 +214,10 @@ for idx in range(1, len(state_space_merge_test)):
     state_space_trading[key_state] = state_space_trading_test[key_state]
     state_space_merge[key_state] = state_space_merge_test[key_state]
     coint_coef[key_state] = coint_coef_test[key_state]
+    
+    del state_space_trading[f"state_{idx + 1}"]
+    del state_space_merge[f"state_{idx + 1}"]
+    del coint_coef[f"state_{idx + 1}"]
 
     env = envTrader(
         trade_state_space=state_space_trading,
@@ -235,7 +245,7 @@ for idx in range(1, len(state_space_merge_test)):
         epsilon_min=epsilon_min,
         learning_rate=learning_rate,
         batch_size=batch_size,
-        pre_train_model=f"pre-train/pre-train-model_test_{idx + 85}.pth",
+        pre_train_model=f"pre-train/pre-train-model_test_{idx + 84}.pth",
         pre_train_mode="eval",
     )
 
@@ -250,4 +260,4 @@ for idx in range(1, len(state_space_merge_test)):
 
     result["action_result"][key_state] = action
     result["reward_result"][key_state] = reward
-    write_cache_file(result, f"pre-train/test_result_{idx + 85}.pkl")
+    write_cache_file(result, f"pre-train/test_result_{idx + 84}.pkl")

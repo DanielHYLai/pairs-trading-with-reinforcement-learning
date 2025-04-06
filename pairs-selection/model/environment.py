@@ -6,11 +6,11 @@ class envTrader:
         coint_coef_space: dict,
         action_space: list,
     ):
-        self.idx = 1
         self.trade_state_space = trade_state_space
         self.agent_state_space = agent_state_space
         self.coint_coef_space = coint_coef_space
         self.action_space = action_space
+        self.idx = int(list(self.trade_state_space.keys())[0].split("_")[1])
 
         self.trade_state = self.trade_state_space[f"state_{self.idx}"]
         self.agent_state = self.agent_state_space[f"state_{self.idx}"]
@@ -29,7 +29,7 @@ class envTrader:
             The initial state of the agent
         """
 
-        self.idx = 1
+        self.idx = int(list(self.trade_state_space.keys())[0].split("_")[1])
         self.trade_state = self.trade_state_space[f"state_{self.idx}"]
         self.agent_state = self.agent_state_space[f"state_{self.idx}"]
         self.coint_coef = self.coint_coef_space[f"state_{self.idx}"]
