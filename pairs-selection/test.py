@@ -5,6 +5,7 @@ from copy import deepcopy
 from time import time
 
 import numpy as np
+
 from model.DQN import DQN_Agent
 from model.environment import envTrader
 from utils_file.tools import load_cache_file, show_elapsed_time, write_cache_file
@@ -148,7 +149,7 @@ for idx in range(8, len(state_space_merge_test)):
     start_time = time()
     while not stop_flag:
         print(f"episode: {episode + 1}")
-        
+
         state = env.reset()
         state = np.reshape(state, [1, state_size])
         done = False
@@ -178,9 +179,9 @@ for idx in range(8, len(state_space_merge_test)):
         temp_result["action_result"][f"episode_{episode + 1}"] = action_history
         temp_result["reward_result"][f"episode_{episode + 1}"] = reward_history
         temp_result["cum_reward_result"][f"episode_{episode + 1}"] = cum_reward_history
-        
+
         print("-" * 20)
-        
+
         if cum_reward > max_cum_reward:
             max_cum_reward = cum_reward
             agent.save_model(f"pre-train/pre-train-model_test_{idx + 84}.pth")
@@ -214,7 +215,7 @@ for idx in range(8, len(state_space_merge_test)):
     state_space_trading[key_state] = state_space_trading_test[key_state]
     state_space_merge[key_state] = state_space_merge_test[key_state]
     coint_coef[key_state] = coint_coef_test[key_state]
-    
+
     del state_space_trading[f"state_{idx + 1}"]
     del state_space_merge[f"state_{idx + 1}"]
     del coint_coef[f"state_{idx + 1}"]

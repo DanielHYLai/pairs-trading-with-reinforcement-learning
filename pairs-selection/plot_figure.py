@@ -1,7 +1,8 @@
 import os
 
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+
 from utils_file.tools import load_cache_file
 
 path = "figure_file"
@@ -9,7 +10,9 @@ if not os.path.exists(path):
     os.makedirs(path)
 
 ap_reward = load_cache_file("data_file/static_strategy/ap_reward_result_test.pkl")
-ap_cum_reward = load_cache_file("data_file/static_strategy/ap_cum_reward_result_test.pkl")
+ap_cum_reward = load_cache_file(
+    "data_file/static_strategy/ap_cum_reward_result_test.pkl"
+)
 test_result = load_cache_file("pre-train/test_result_119.pkl")
 
 cum_reward = []
@@ -35,8 +38,22 @@ for x, y in enumerate(ap_reward_table.median()):
 
 plt.figure(figsize=(12, 6))
 plt.boxplot(ap_reward_table)
-plt.scatter(above_median_x, above_median_y, s=90, color="red", marker="o", label=f"{len(above_median_x)}")
-plt.scatter(below_median_x, below_median_y, s=90, color="blue", marker="x", label=f"{len(below_median_x)}")
+plt.scatter(
+    above_median_x,
+    above_median_y,
+    s=90,
+    color="red",
+    marker="o",
+    label=f"{len(above_median_x)}",
+)
+plt.scatter(
+    below_median_x,
+    below_median_y,
+    s=90,
+    color="blue",
+    marker="x",
+    label=f"{len(below_median_x)}",
+)
 plt.xlabel("Month", fontsize=14)
 plt.ylabel("Reward", fontsize=14)
 plt.legend()
@@ -46,7 +63,9 @@ plt.show()
 ap_cum_reward_table = pd.DataFrame(ap_cum_reward).T
 plt.figure(figsize=(12, 6))
 plt.boxplot(ap_cum_reward_table)
-plt.scatter(range(1, len(cum_reward) + 1), cum_reward, s=90, color="red", zorder=3, label="DQN")
+plt.scatter(
+    range(1, len(cum_reward) + 1), cum_reward, s=90, color="red", zorder=3, label="DQN"
+)
 plt.xlabel("Month", fontsize=14)
 plt.ylabel("Cumulative Reward", fontsize=14)
 plt.legend()
@@ -71,8 +90,14 @@ plt.xlabel("Month", fontsize=14)
 plt.ylabel("Rank", fontsize=14)
 plt.title("Rank of Cumulative Reward for Each Month", fontsize=16)
 for i in range(len(rank_result)):
-    plt.text(i + 1, rank_result[i] + 2, f"{rank_result[i]}", 
-             fontsize=12, ha="left", color="black")
+    plt.text(
+        i + 1,
+        rank_result[i] + 2,
+        f"{rank_result[i]}",
+        fontsize=12,
+        ha="left",
+        color="black",
+    )
 plt.savefig(f"{path}/3.png", dpi=200, bbox_inches="tight")
 plt.show()
 
@@ -94,10 +119,22 @@ plt.xlabel("Month", fontsize=14)
 plt.ylabel("Rank", fontsize=14)
 plt.title("Rank of Reward for Each Month", fontsize=16)
 for i in range(len(rank_result)):
-    plt.text(i + 1, rank_result[i], f"{rank_result[i]}", 
-             fontsize=12, ha="left", color="black")
-    plt.text(i + 1, rank_result[i] + 40, f"{list(test_result['action_result'].values())[i]}", 
-             fontsize=12, ha="left", color="blue")
+    plt.text(
+        i + 1,
+        rank_result[i],
+        f"{rank_result[i]}",
+        fontsize=12,
+        ha="left",
+        color="black",
+    )
+    plt.text(
+        i + 1,
+        rank_result[i] + 40,
+        f"{list(test_result['action_result'].values())[i]}",
+        fontsize=12,
+        ha="left",
+        color="blue",
+    )
 plt.savefig(f"{path}/4.png", dpi=200, bbox_inches="tight")
 plt.show()
 
@@ -122,5 +159,6 @@ for i in range(len(test_result["reward_result"])):
     ap_reward_mean_rank.append(rank)
 
 from scipy.stats import wilcoxon
+
 WRS = wilcoxon(x=rank_result, y=ap_reward_mean, alternative="greater")
 print(f"p.value of WRS: {WRS[1]}")
