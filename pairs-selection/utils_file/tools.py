@@ -55,3 +55,20 @@ def show_elapsed_time(end_time: float):
     hours = int(end_time // 3600)
 
     print(f"Time elapsed: {hours} hours {minutes} minutes {seconds: .2f} seconds")
+
+
+def rank_finder(target_list, comparison_table):
+    result = []
+    
+    for i in range(len(target_list)):
+        target = target_list[i]
+        value = comparison_table[f"state_{i + 1}"].sort_values(ascending=False)
+        rank = 1
+        
+        for j in value:
+            if target <= j:
+                rank += 1
+        
+        result.append(rank)
+    
+    return result
