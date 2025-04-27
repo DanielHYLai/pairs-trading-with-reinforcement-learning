@@ -5,7 +5,6 @@ from copy import deepcopy
 from time import time
 
 import numpy as np
-
 from model.DQN import DQN_Agent
 from model.environment import envTrader
 from utils_file.tools import load_cache_file, show_elapsed_time, write_cache_file
