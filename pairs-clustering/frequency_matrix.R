@@ -110,23 +110,23 @@ for (q in seq(0.1, 0.2, length.out = 10)) {
                      threshold_q = q)
 }
 
-# for (idx in seq_along(threshold_FM_all)) {
-#     cat("idx:", idx, "\n")
-#     pheatmap::pheatmap(
-#         mat = threshold_FM_all[[idx]], 
-#         color = colorRampPalette(c("red", "orange", "white"))(100), 
-#         show_rownames = FALSE, 
-#         show_colnames = FALSE, 
-#         # cutree_rows = 3, 
-#         # cutree_cols = 3, 
-#         treeheight_row = 0, 
-#         treeheight_col = 0
-#     )
-#     clustering_method_Optimal(
-#         df = threshold_FM_all[[idx]], K = 3, 
-#         assigned_method = "HC", seed = 123, 
-#         visualized = FALSE
-#     ) %>% write.csv(., file = paste0("temp-", idx, ".csv"))
-# }
+for (idx in seq_along(threshold_FM_all)) {
+    cat("idx:", idx, "\n")
+    pheatmap::pheatmap(
+        mat = threshold_FM_all[[idx]],
+        color = colorRampPalette(c("red", "orange", "white"))(100),
+        show_rownames = FALSE,
+        show_colnames = FALSE,
+        # cutree_rows = 3,
+        # cutree_cols = 3,
+        treeheight_row = 0,
+        treeheight_col = 0
+    )
+    clustering_method_Optimal(
+        df = threshold_FM_all[[idx]], K = 3,
+        assigned_method = "HC", seed = 123,
+        visualized = FALSE
+    ) %>% write.csv(., file = paste0("temp-", idx, ".csv"))
+}
 
 ###################################################################################################

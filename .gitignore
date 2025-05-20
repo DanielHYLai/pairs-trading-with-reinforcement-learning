@@ -3,5 +3,6 @@
 *.RData
 *.pkl
 *.pth
+*.xlsx
 .DS_Store
 __pycache__
