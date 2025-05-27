@@ -57,16 +57,16 @@ wide_data <- data_train %>%
 scale_factor <- max(wide_data$O, wide_data$WELL, na.rm = TRUE) / max(abs(wide_data$Diff), na.rm = TRUE)
 
 ggplot(wide_data, aes(x = Date)) +
-    geom_line(aes(y = O, color = "O"), size = 1) +
-    geom_line(aes(y = WELL, color = "WELL"), size = 1) +
-    geom_line(aes(y = Diff * scale_factor, color = "O - WELL"), size = 1, linetype = "dashed") +
+    geom_line(aes(y = O, color = "O"), size = 3) +
+    geom_line(aes(y = WELL, color = "WELL"), size = 3) +
+    geom_line(aes(y = Diff * scale_factor, color = "O - WELL"), size = 3) +
     scale_y_continuous(
         name = "Close Price",
         sec.axis = sec_axis(~ . / scale_factor, name = "Price Difference (O - WELL)")
     ) +
     scale_color_manual(
         name = "",
-        values = c("O" = "lightblue", "WELL" = "lightgreen", "O - WELL" = "pink")
+        values = c("O" = "blue", "WELL" = "green", "O - WELL" = "pink")
     ) +
     labs(
         title = "Closing Prices of O and WELL with Difference",
@@ -75,12 +75,13 @@ ggplot(wide_data, aes(x = Date)) +
     theme_minimal() +
     theme(
         text = element_text(family = "Times New Roman"),
-        axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14),
-        plot.title = element_text(size = 16, hjust = 0.5),
+        axis.text = element_text(size = 20),
+        axis.title = element_text(size = 24),
+        legend.text = element_text(size = 20), 
+        plot.title = element_text(size = 28, hjust = 0.5),
         legend.position = "bottom"
     ) -> pp; pp
-ggsave("pair_example.png", plot = pp, width = 12, height = 8, dpi = 300)
+ggsave("pair_example.png", plot = pp, width = 25, height = 6, dpi = 300)
 
 #-----
 # 展示固定相同 q 之下，觀察 K 的效果
